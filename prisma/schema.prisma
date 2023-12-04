@@ -20,6 +20,8 @@ model Address {
   id                 String  @id @default(uuid())
   owner_id           String  @unique
   cep                String
+  state              String
+  city               String
   address            String
   address_identifier String
   complement         String?

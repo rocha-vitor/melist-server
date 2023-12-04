@@ -48,6 +48,6 @@ export class CreateAccountController {
       },
     });
 
-    return account;
+    return { account };
   }
 }

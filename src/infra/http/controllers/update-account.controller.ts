@@ -5,21 +5,22 @@ import {
   Injectable,
   Put,
   UsePipes,
+  Request,
 } from '@nestjs/common';
 import { z } from 'zod';
 import { ZodValidationPipe } from 'src/infra/pipes/zod-validation-pipe';
 import { PrismaService } from 'src/infra/database/prisma/prisma.service';
-import { CurrentUser } from 'src/infra/auth/current-user-decorator';
-import { UserPayload } from 'src/infra/auth/jwt.strategy';
 // import { errors } from '../errors';
 
 const updateAccountBodySchema = z.object({
   address: z
     .object({
       cep: z.string().length(8),
+      state: z.string().length(2).toUpperCase(),
+      city: z.string().min(1),
       address: z.string().min(1),
       address_identifier: z.string().min(1),
-      complement: z.string(),
+      complement: z.string().optional(),
     })
     .optional(),
 });
@@ -33,12 +34,27 @@ export class UpdateAccountController {
 
   @Put()
   @UsePipes(new ZodValidationPipe(updateAccountBodySchema))
-  async handle(
-    @Body() body: UpdateAccountBodySchema,
-    @CurrentUser() user: UserPayload,
-  ) {
+  async handle(@Request() request: any, @Body() body: UpdateAccountBodySchema) {
+    const { sub } = request.user;
     const { address } = body;
 
-    return { address, user };
+    const accountUpdated = await this.prisma.account.update({
+      where: {
+        id: sub,
+      },
+      data: {
+        address: address
+          ? {
+              upsert: {
+                create: address,
+                update: address,
+              },
+            }
+          : undefined,
+      },
+      include: { address: true },
+    });
+
+    return { account: accountUpdated };
   }
 }
