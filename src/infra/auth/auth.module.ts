@@ -6,6 +6,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { EnvService } from '../env/env.service';
 import { EnvModule } from '../env/env.module';
+import { envs } from '../envs';
 
 @Module({
   imports: [
@@ -14,19 +15,11 @@ import { EnvModule } from '../env/env.module';
       imports: [EnvModule],
       inject: [EnvService],
       global: true,
-      useFactory(env: EnvService) {
-        const privateKey = env.get('JWT_PRIVATE_KEY');
-        const publicKey = env.get('JWT_PUBLIC_KEY');
-
-        console.log({
-          privateKey,
-          publicKey,
-        });
-
+      useFactory() {
         return {
           signOptions: { algorithm: 'RS256', expiresIn: 604800 },
-          privateKey,
-          publicKey,
+          privateKey: envs.JWT_PRIVATE_KEY,
+          publicKey: envs.JWT_PUBLIC_KEY,
         };
       },
     }),
