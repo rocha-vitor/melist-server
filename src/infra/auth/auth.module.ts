@@ -18,6 +18,11 @@ import { EnvModule } from '../env/env.module';
         const privateKey = env.get('JWT_PRIVATE_KEY');
         const publicKey = env.get('JWT_PUBLIC_KEY');
 
+        console.log({
+          privateKey,
+          publicKey,
+        });
+
         return {
           signOptions: { algorithm: 'RS256', expiresIn: 604800 },
           privateKey,
