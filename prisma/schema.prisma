@@ -12,6 +12,7 @@ model Account {
   name    String
   phone   String   @unique
   address Address?
+  lists   List[]
 
   @@map("accounts")
 }
@@ -32,12 +33,40 @@ model Address {
 }
 
 model Product {
-  id       String @id @default(uuid())
-  gtin     String @unique
-  title    String
-  brand    String
-  section  String
-  category String
+  id         String     @id @default(uuid())
+  gtin       String     @unique
+  title      String
+  brand      String
+  section    String
+  category   String
+  list_Items ListItem[]
 
   @@map("products")
+}
+
+model List {
+  id        String     @id @default(uuid())
+  owner_id  String
+  name      String
+  items     ListItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now())
+
+  owner Account @relation(fields: [owner_id], references: [id])
+
+  @@map("lists")
+}
+
+model ListItem {
+  id         String   @id @default(uuid())
+  list_id    String
+  product_id String
+  qty        Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  list    List    @relation(fields: [list_id], references: [id])
+  product Product @relation(fields: [product_id], references: [id])
+
+  @@map("list_items")
 }

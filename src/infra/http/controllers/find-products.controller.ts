@@ -2,7 +2,6 @@ import { Controller, Injectable, UsePipes, Query, Get } from '@nestjs/common';
 import { z } from 'zod';
 import { ZodValidationPipe } from 'src/infra/pipes/zod-validation-pipe';
 import { PrismaService } from 'src/infra/database/prisma/prisma.service';
-import { Public } from '../../auth/public';
 
 const findProductshQuerySchema = z.object({
   filter: z
@@ -19,7 +18,6 @@ const findProductshQuerySchema = z.object({
 type FindProductshQuerySchema = z.infer<typeof findProductshQuerySchema>;
 
 @Injectable()
-@Public()
 @Controller('/products')
 export class FindProductsController {
   constructor(private readonly prisma: PrismaService) {}

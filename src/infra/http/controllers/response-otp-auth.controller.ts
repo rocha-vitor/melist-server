@@ -32,11 +32,14 @@ export class ResponseOtpAuthController {
   @Post()
   @UsePipes(new ZodValidationPipe(responseOtpAuthBodySchema))
   async handle(@Body() body: ResponseOtpAuthBodySchema) {
-    const accountExists = await this.prisma.account.findUnique({
+    const account = await this.prisma.account.findUnique({
       where: { id: body.accountId },
+      include: {
+        address: true,
+      },
     });
 
-    if (!accountExists) {
+    if (!account) {
       throw new BadRequestException({
         code: errors.resourceNotFound,
         msg: 'accountId does not exists',
@@ -54,6 +57,6 @@ export class ResponseOtpAuthController {
       sub: body.accountId,
     });
 
-    return { accessToken };
+    return { account, accessToken };
   }
 }

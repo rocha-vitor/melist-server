@@ -37,7 +37,7 @@ export class CreateAccountController {
     if (accountAlreadyExists) {
       throw new BadRequestException({
         code: errors.resourceAlreadyExists,
-        msg: 'the phone number already exists',
+        msg: 'phone number already exists',
       });
     }
 

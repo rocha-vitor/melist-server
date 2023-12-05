@@ -6,6 +6,9 @@ import { CryptographyModule } from '../cryptography/cryptography.module';
 import { RequestOtpAuthController } from './controllers/request-otp-auth.controller';
 import { ResponseOtpAuthController } from './controllers/response-otp-auth.controller';
 import { FindProductsController } from './controllers/find-products.controller';
+import { CreateListController } from './controllers/create-list.controller';
+import { UpdateListController } from './controllers/update-list.controller';
+import { FindListsController } from './controllers/find-lists.controller';
 
 @Module({
   imports: [CryptographyModule],
@@ -15,6 +18,9 @@ import { FindProductsController } from './controllers/find-products.controller';
     RequestOtpAuthController,
     ResponseOtpAuthController,
     FindProductsController,
+    CreateListController,
+    UpdateListController,
+    FindListsController,
   ],
   providers: [PrismaService],
 })
