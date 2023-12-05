@@ -30,3 +30,14 @@ model Address {
 
   @@map("adresses")
 }
+
+model Product {
+  id       String @id @default(uuid())
+  gtin     String @unique
+  title    String
+  brand    String
+  section  String
+  category String
+
+  @@map("products")
+}
