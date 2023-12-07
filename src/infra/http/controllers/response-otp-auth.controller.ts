@@ -14,7 +14,7 @@ import { errors } from '../errors';
 import { JwtEncrypter } from '@/infra/cryptography/jwt-encrypter';
 
 const responseOtpAuthBodySchema = z.object({
-  accountId: z.string().uuid(),
+  phone: z.string().min(1),
   code: z.number().int(),
 });
 
@@ -33,7 +33,7 @@ export class ResponseOtpAuthController {
   @UsePipes(new ZodValidationPipe(responseOtpAuthBodySchema))
   async handle(@Body() body: ResponseOtpAuthBodySchema) {
     const account = await this.prisma.account.findUnique({
-      where: { id: body.accountId },
+      where: { phone: body.phone },
       include: {
         address: true,
       },
@@ -42,7 +42,7 @@ export class ResponseOtpAuthController {
     if (!account) {
       throw new BadRequestException({
         code: errors.resourceNotFound,
-        msg: 'accountId does not exists',
+        msg: 'account does not exists',
       });
     }
 
@@ -54,7 +54,7 @@ export class ResponseOtpAuthController {
     }
 
     const accessToken = await this.encrypter.encrypt({
-      sub: body.accountId,
+      sub: account.id,
     });
 
     return { account, accessToken };

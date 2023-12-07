@@ -9,6 +9,7 @@ import { FindProductsController } from './controllers/find-products.controller';
 import { CreateListController } from './controllers/create-list.controller';
 import { UpdateListController } from './controllers/update-list.controller';
 import { FindListsController } from './controllers/find-lists.controller';
+import { DeleteListController } from './controllers/delete-list.controller';
 
 @Module({
   imports: [CryptographyModule],
@@ -20,6 +21,7 @@ import { FindListsController } from './controllers/find-lists.controller';
     FindProductsController,
     CreateListController,
     UpdateListController,
+    DeleteListController,
     FindListsController,
   ],
   providers: [PrismaService],

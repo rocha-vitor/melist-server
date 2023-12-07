@@ -14,7 +14,7 @@ import { Public } from '../../auth/public';
 import { errors } from '../errors';
 
 const requestOtpAuthBodySchema = z.object({
-  accountId: z.string().uuid(),
+  phone: z.string().min(1),
 });
 
 type RequestOtpAuthBodySchema = z.infer<typeof requestOtpAuthBodySchema>;
@@ -30,13 +30,13 @@ export class RequestOtpAuthController {
   @UsePipes(new ZodValidationPipe(requestOtpAuthBodySchema))
   async handle(@Body() body: RequestOtpAuthBodySchema) {
     const accountExists = await this.prisma.account.findUnique({
-      where: { id: body.accountId },
+      where: { phone: body.phone },
     });
 
     if (!accountExists) {
       throw new BadRequestException({
         code: errors.resourceNotFound,
-        msg: 'accountId does not exists',
+        msg: 'account does not exists',
       });
     }
 
