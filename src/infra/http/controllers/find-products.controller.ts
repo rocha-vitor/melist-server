@@ -27,7 +27,9 @@ export class FindProductsController {
   async handle(@Query() { filter }: FindProductshQuerySchema) {
     const query = {};
 
-    if (filter) {
+    if (Number(filter)) {
+      Object.assign(query, { gtin: filter });
+    } else if (filter) {
       Object.assign(query, {
         OR: [
           {

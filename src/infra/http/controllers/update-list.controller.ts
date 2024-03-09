@@ -49,9 +49,16 @@ export class UpdateListController {
     const { sub } = request.user;
     const { listId, name, itemsToRemove, itemsToUpdate, itemsToAdd } = body;
 
-    const list = await this.prisma.list.findUnique({ where: { id: listId } });
+    const list = await this.prisma.list.findUnique({
+      where: { id: listId },
+      include: { participants: true },
+    });
 
-    if (!list || list.owner_id !== sub) {
+    if (
+      !list ||
+      list.owner_id !== sub ||
+      !list.participants.find(({ account_id }) => account_id === sub)
+    ) {
       throw new BadRequestException({
         code: errors.resourceNotFound,
         msg: 'list does not exists',

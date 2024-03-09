@@ -10,7 +10,7 @@ import {
 import { z } from 'zod';
 import { ZodValidationPipe } from 'src/infra/pipes/zod-validation-pipe';
 import { PrismaService } from 'src/infra/database/prisma/prisma.service';
-// import { errors } from '../errors';
+import { Gender } from '@prisma/client';
 
 const updateAccountBodySchema = z.object({
   address: z
@@ -23,6 +23,7 @@ const updateAccountBodySchema = z.object({
       complement: z.string().optional(),
     })
     .optional(),
+  gender: z.enum([Gender.MAN, Gender.WOMAN, Gender.OTHERS]).optional(),
 });
 
 type UpdateAccountBodySchema = z.infer<typeof updateAccountBodySchema>;
@@ -36,13 +37,14 @@ export class UpdateAccountController {
   @UsePipes(new ZodValidationPipe(updateAccountBodySchema))
   async handle(@Request() request: any, @Body() body: UpdateAccountBodySchema) {
     const { sub } = request.user;
-    const { address } = body;
+    const { address, gender } = body;
 
     const accountUpdated = await this.prisma.account.update({
       where: {
         id: sub,
       },
       data: {
+        gender,
         address: address
           ? {
               upsert: {

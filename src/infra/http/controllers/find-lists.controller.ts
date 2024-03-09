@@ -12,12 +12,28 @@ export class FindListsController {
 
     const lists = await this.prisma.list.findMany({
       where: {
-        owner_id: sub,
+        OR: [
+          {
+            owner_id: sub,
+          },
+          {
+            participants: {
+              some: {
+                account_id: sub,
+              },
+            },
+          },
+        ],
       },
       include: {
         items: {
           include: {
             product: true,
+          },
+        },
+        participants: {
+          include: {
+            participant: true,
           },
         },
       },

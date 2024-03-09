@@ -7,12 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Gender {
+  MAN
+  WOMAN
+  OTHERS
+}
+
 model Account {
-  id      String   @id @default(uuid())
-  name    String
-  phone   String   @unique
-  address Address?
-  lists   List[]
+  id                 String            @id @default(uuid())
+  name               String
+  phone              String            @unique
+  gender             Gender?
+  address            Address?
+  lists              List[]
+  listsAsParticipant ListParticipant[]
 
   @@map("accounts")
 }
@@ -52,7 +60,8 @@ model List {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @default(now())
 
-  owner Account @relation(fields: [owner_id], references: [id])
+  owner        Account           @relation(fields: [owner_id], references: [id])
+  participants ListParticipant[]
 
   @@map("lists")
 }
@@ -69,4 +78,15 @@ model ListItem {
   product Product @relation(fields: [product_id], references: [id])
 
   @@map("list_items")
+}
+
+model ListParticipant {
+  id         String @id @default(uuid())
+  account_id String
+  list_id    String
+
+  list        List    @relation(fields: [list_id], references: [id], onDelete: Cascade)
+  participant Account @relation(fields: [account_id], references: [id], onDelete: Cascade)
+
+  @@map("list_participants")
 }

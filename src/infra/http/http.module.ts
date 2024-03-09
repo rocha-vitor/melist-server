@@ -10,6 +10,7 @@ import { CreateListController } from './controllers/create-list.controller';
 import { UpdateListController } from './controllers/update-list.controller';
 import { FindListsController } from './controllers/find-lists.controller';
 import { DeleteListController } from './controllers/delete-list.controller';
+import { SetListParticipantController } from './controllers/set-list-participant.controller';
 
 @Module({
   imports: [CryptographyModule],
@@ -23,6 +24,7 @@ import { DeleteListController } from './controllers/delete-list.controller';
     UpdateListController,
     DeleteListController,
     FindListsController,
+    SetListParticipantController,
   ],
   providers: [PrismaService],
 })
